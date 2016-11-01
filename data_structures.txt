@@ -1,0 +1,89 @@
+Beyond records...
+
+For small amounts of data: proplist.
+        A proplist is any list of tuples of the form [{Key,Value}]
+        To work with proplists, you can use the proplists module. 
+        It contains functions such as 
+                proplists:delete/2, 
+                proplists:get_value/2,
+                proplists:get_all_values/2, 
+                proplists:lookup/2 and 
+                proplists:lookup_all/2.
+
+Because proplists are so loosely defined, they're often used to deal with
+configuration lists, and general description of a given item. 
+
+Proplists are not exactly complete data structures. They're more of a common
+pattern that appears when using lists and tuples to represent some object or
+item; the proplists module is a bit of a toolbox over such a pattern.
+
+---
+
+A more complete key-value store for small amount of data: orddict module
+
+Orddicts (ordered dictionaries) are proplists with a taste for formality. 
+Each key can be there once, the whole list is sorted for faster average lookup, etc. 
+Common functions for the CRUD usage include 
+        orddict:store/3, 
+        orddict:find/2 (when you do not know whether the key is in the dictionaries), 
+        orddict:fetch/2 (when you know it is there or that it must be there) and 
+        orddict:erase/2.
+
+Orddicts are a generally good compromise between complexity and efficiency up
+to about 75 elements. After that amount, you should switch to different
+key-value stores.
+
+---
+
+There are basically two key-value structures/modules to deal with larger amounts of data: 
+        - dicts  (Dictionaries). 
+                - Dictionaries have the same interface as orddicts
+                - Good choices to scale orddicts up whenever needed.
+        - gb_trees (General Balanced Trees)
+                - Have a bunch more functions leaving you more direct control over how the structure is to be used. 
+                - There are basically two modes for gb_trees: 
+                        - Smart Mode: The mode where you know your structure in and out.
+                        - Naive Mode: The mode where you can't assume much about it.
+
+                - The disadvantage of 'naive' functions over 'smart' ones is
+                  that because gb_trees are balanced trees, whenever you insert
+                  a new element (or delete a bunch), it might be possible that the tree will need
+                  to balance itself. This can take time and memory (even in useless checks just
+                  to make sure). The 'smart' function all assume that the key is present in the
+                  tree: this lets you skip all the safety checks and results in faster times.
+
+        - Dicts have the best read speeds while the gb_trees tend to be a
+          little quicker on other operations. You can judge based on your own
+          needs which one would be the best.
+
+Note: Some special key-value stores exist to deal with resources of different
+size. Such stores are 
+        - ETS tables, 
+        - DETS tables and 
+        - The mnesia database.
+
+However, their use is strongly related to the concepts of multiple processes and distribution. 
+
+Starting with version 17.0, the language supports a new native key-value data
+type, described in Postscript: Maps. They should be the new de-facto
+replacement for dicts.
+
+- Arrays (store and access elements with numerical indices and fold over the whole structure).
+
+- Sets
+        - ordsets
+        - sets
+        - gb_sets
+        - sofs (sets of sets)
+
+- Directed Graphs
+        - digraph
+                - construction and modification of directed graphs: manipulating edges, vertices, finding paths and cycles etc.
+        - digraph_utils
+                - navigate a graph (postorder, preorder), testing for cycles, arborescenes or trees, finding neighbours and so on.
+
+
+- Queues
+        - Double-ended FIFO queue.
+
+stdlib: http://erlang.org/doc/apps/stdlib/index.html
